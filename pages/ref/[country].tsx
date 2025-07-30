@@ -10,10 +10,10 @@ interface Props {
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const { country } = ctx.params!;
-  const sub = ctx.query.sub as string;
+  const sub = (ctx.query.sub as string) || "defaultsub"; // ✅ default jika kosong
 
   const baseUrl = offerMap[country as string] || offerMap["default"];
-  const finalUrl = sub ? `${baseUrl}${encodeURIComponent(sub)}` : baseUrl;
+  const finalUrl = `${baseUrl}${encodeURIComponent(sub)}`;
 
   return {
     props: {
