@@ -1,87 +1,64 @@
-// pages/index.tsx
 "use client";
-import React from "react";
+import React, { useState } from "react";
+
+const API_KEY = "8d6d91941230817f7807d643736e8a49"; // 🔁 Ganti dengan API Key milikmu
 
 export default function Home() {
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState([]);
+
+  const searchTMDB = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!query) return;
+
+    const res = await fetch(
+      `https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(
+        query
+      )}`
+    );
+    const data = await res.json();
+    setResults(data.results || []);
+  };
+
   return (
-    <main className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 transition-colors">
-      {/* Header */}
-      <header className="p-4 bg-white dark:bg-gray-800 border-b dark:border-gray-700 shadow-sm sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-indigo-600">ClikMe</h1>
-          <nav className="space-x-4 text-sm">
-            <a href="#features" className="hover:underline">
-              Fitur
-            </a>
-            <a href="#cara" className="hover:underline">
-              Cara Kerja
-            </a>
-            <a href="#mulai" className="hover:underline">
-              Mulai
-            </a>
-          </nav>
-        </div>
-      </header>
+    <main className="min-h-screen bg-gray-100 text-gray-800 p-4">
+      <h1 className="text-2xl font-bold mb-4 text-center">🎬 Movie & TV Search</h1>
 
-      {/* Hero */}
-      <section className="py-16 px-6 text-center">
-        <h2 className="text-4xl font-bold mb-4">
-          Shorten. Redirect. Monetize.
-        </h2>
-        <p className="max-w-xl mx-auto text-lg text-gray-600 dark:text-gray-300 mb-6">
-          ClikMe adalah layanan redirect cerdas yang mendukung tracking `sub`,
-          dan bisa diarahkan berdasarkan lokasi negara untuk monetisasi dengan Adsterra, dll.
-        </p>
-        <a
-          href="#mulai"
-          className="inline-block bg-indigo-600 text-white px-6 py-3 rounded hover:bg-indigo-700 transition"
-        >
-          Mulai Sekarang
-        </a>
-      </section>
+      <form onSubmit={searchTMDB} className="max-w-md mx-auto mb-6">
+        <input
+          type="text"
+          placeholder="Cari film atau serial..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          className="w-full px-4 py-2 border rounded"
+        />
+      </form>
 
-      {/* Features */}
-      <section id="features" className="py-12 px-6 bg-white dark:bg-gray-800 border-t">
-        <div className="max-w-5xl mx-auto grid md:grid-cols-3 gap-8 text-center">
-          <div>
-            <h3 className="text-xl font-semibold">Redirect Berdasarkan Negara</h3>
-            <p className="text-gray-500 dark:text-gray-400">
-              Otomatis arahkan pengunjung ke penawaran sesuai asal negara mereka.
-            </p>
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        {results.map((item: any) => (
+          <div key={item.id} className="bg-white shadow rounded overflow-hidden">
+            {item.poster_path ? (
+              <img
+                src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
+                alt={item.title || item.name}
+                className="w-full h-auto"
+              />
+            ) : (
+              <div className="w-full h-72 bg-gray-300 flex items-center justify-center text-gray-600">
+                No Image
+              </div>
+            )}
+            <div className="p-2">
+              <h2 className="text-sm font-semibold">
+                {item.title || item.name}
+              </h2>
+              <p className="text-xs text-gray-500">
+                {item.release_date || item.first_air_date || "Unknown"}
+              </p>
+            </div>
           </div>
-          <div>
-            <h3 className="text-xl font-semibold">Tracking dengan Sub ID</h3>
-            <p className="text-gray-500 dark:text-gray-400">
-              Tambahkan parameter `sub` untuk pelacakan campaign atau traffic source.
-            </p>
-          </div>
-          <div>
-            <h3 className="text-xl font-semibold">Mudah Disesuaikan</h3>
-            <p className="text-gray-500 dark:text-gray-400">
-              Atur offer cukup dari satu file. Praktis dan fleksibel.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section id="mulai" className="py-16 px-6 text-center bg-indigo-50 dark:bg-gray-800">
-        <h2 className="text-2xl font-bold mb-4">Siap memulai?</h2>
-        <p className="mb-6 text-gray-600 dark:text-gray-300">
-          Gunakan URL seperti <code>/ref/fr?sub=abc123</code> dan arahkan traffic kamu sekarang.
-        </p>
-        <a
-          href="/ref/fr?sub=demo"
-          className="inline-block bg-indigo-600 text-white px-6 py-3 rounded hover:bg-indigo-700 transition"
-        >
-          Coba Sekarang
-        </a>
-      </section>
-
-      {/* Footer */}
-      <footer className="text-center text-sm text-gray-500 dark:text-gray-400 py-6">
-        © {new Date().getFullYear()} ClikMe. Dibuat dengan ❤️.
-      </footer>
+        ))}
+      </div>
     </main>
   );
 }
