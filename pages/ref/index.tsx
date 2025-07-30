@@ -1,3 +1,4 @@
+// pages/ref/index.tsx
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import { useEffect } from "react";
@@ -7,13 +8,11 @@ interface Props {
   targetUrl: string;
 }
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
+export const getServerSideProps: GetServerSideProps = async () => {
   const baseUrl = offerMap["default"];
 
   if (!baseUrl) {
-    return {
-      notFound: true,
-    };
+    return { notFound: true };
   }
 
   return {
@@ -25,74 +24,36 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
 export default function RedirectPage({ targetUrl }: Props) {
   useEffect(() => {
-    window.location.href = targetUrl;
+    const timer = setTimeout(() => {
+      window.location.href = targetUrl;
+    }, 3000); // 3 detik
+    return () => clearTimeout(timer);
   }, [targetUrl]);
 
   return (
     <>
       <Head>
         <title>Redirecting...</title>
-        <meta httpEquiv="refresh" content={`3;url=${targetUrl}`} />
-        <link
-          rel="stylesheet"
-          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"
-        />
+        <meta name="robots" content="noindex,nofollow" />
       </Head>
-      <div
-        id="load"
-        style={{
-          position: "absolute",
-          width: "600px",
-          height: "36px",
-          left: "50%",
-          top: "40%",
-          marginLeft: "-300px",
-          userSelect: "none",
-          cursor: "default",
-        }}
-      >
-        {"GNI DAOL".split("").reverse().map((char, i) => (
-          <div
-            key={i}
-            style={{
-              position: "absolute",
-              width: "20px",
-              height: "36px",
-              opacity: 0,
-              animation: `move 2s linear infinite`,
-              animationDelay: `${i * 0.2}s`,
-              transform: "rotate(180deg)",
-              color: "#1bf822",
-              fontFamily: "Helvetica, Arial, sans-serif",
-            }}
-          >
-            {char}
-          </div>
-        ))}
-        <style jsx>{`
-          @keyframes move {
-            0% {
-              left: 0;
-              opacity: 0;
-            }
-            35% {
-              left: 41%;
-              transform: rotate(0deg);
-              opacity: 1;
-            }
-            65% {
-              left: 59%;
-              transform: rotate(0deg);
-              opacity: 1;
-            }
-            100% {
-              left: 100%;
-              transform: rotate(-180deg);
-              opacity: 0;
-            }
-          }
-        `}</style>
+
+      <div className="min-h-screen flex items-center justify-center bg-gray-900 text-white">
+        <div className="flex flex-col items-center space-y-4">
+          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-green-400 border-opacity-60"></div>
+          <p className="text-lg font-medium">Redirecting...</p>
+        </div>
       </div>
+
+      <style jsx>{`
+        .animate-spin {
+          animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+          to {
+            transform: rotate(360deg);
+          }
+        }
+      `}</style>
     </>
   );
 }
