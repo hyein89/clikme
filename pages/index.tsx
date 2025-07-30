@@ -14,7 +14,7 @@ export default function Home() {
     const res = await fetch(
       `https://api.themoviedb.org/3/search/multi?query=${encodeURIComponent(
         query
-      )}&api_key=YOUR_TMDB_API_KEY`
+      )}&api_key=8d6d91941230817f7807d643736e8a49`
     );
     const data = await res.json();
     setResults(data.results || []);
