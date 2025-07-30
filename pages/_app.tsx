@@ -29,11 +29,12 @@ function MyApp({ Component, pageProps }: AppProps) {
 
       <noscript>
         <a href="/" target="_blank">
-          <img
-            src="//sstatic1.histats.com/0.gif?4828760&101"
-            alt="site stats"
-            border="0"
-          />
+<img
+  src="//sstatic1.histats.com/0.gif?4828760&101"
+  alt="site stats"
+  style={{ border: "0" }}
+/>
+
         </a>
       </noscript>
     </>
