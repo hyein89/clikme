@@ -8,11 +8,13 @@ interface Props {
   targetUrl: string;
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const baseUrl = offerMap["default"];
 
   if (!baseUrl) {
-    return { notFound: true };
+    return {
+      notFound: true,
+    };
   }
 
   return {
@@ -24,30 +26,22 @@ export const getServerSideProps: GetServerSideProps = async () => {
 
 export default function RedirectPage({ targetUrl }: Props) {
   useEffect(() => {
-    const timer = setTimeout(() => {
-      window.location.href = targetUrl;
-    }, 3000); // 3 detik
-    return () => clearTimeout(timer);
+    window.location.href = targetUrl;
   }, [targetUrl]);
 
   return (
     <>
       <Head>
         <title>Redirecting...</title>
-        <meta name="robots" content="noindex,nofollow" />
+        <meta httpEquiv="refresh" content={`3;url=${targetUrl}`} />
       </Head>
 
-      <div className="min-h-screen flex items-center justify-center bg-gray-900 text-white">
-        <div className="flex flex-col items-center space-y-4">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-green-400 border-opacity-60"></div>
-          <p className="text-lg font-medium">Redirecting...</p>
-        </div>
+      <div style={styles.container}>
+        <div style={styles.spinner}></div>
+        <p style={styles.text}>Redirecting...</p>
       </div>
 
       <style jsx>{`
-        .animate-spin {
-          animation: spin 1s linear infinite;
-        }
         @keyframes spin {
           to {
             transform: rotate(360deg);
@@ -57,3 +51,28 @@ export default function RedirectPage({ targetUrl }: Props) {
     </>
   );
 }
+
+const styles = {
+  container: {
+    minHeight: "100vh",
+    backgroundColor: "#0f172a",
+    color: "#fff",
+    display: "flex",
+    flexDirection: "column" as const,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  spinner: {
+    width: "64px",
+    height: "64px",
+    border: "8px solid #334155",
+    borderTop: "8px solid #22c55e",
+    borderRadius: "50%",
+    animation: "spin 1s linear infinite",
+    marginBottom: "20px",
+  },
+  text: {
+    fontSize: "18px",
+    color: "#cbd5e1",
+  },
+};
