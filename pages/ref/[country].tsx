@@ -30,10 +30,46 @@ export default function RedirectPage({ targetUrl }: Props) {
   return (
     <>
       <Head>
-        <meta httpEquiv="refresh" content={`0;url=${targetUrl}`} />
+        <meta httpEquiv="refresh" content={`2;url=${targetUrl}`} />
         <title>Redirecting...</title>
       </Head>
-      <p>Redirecting to <a href={targetUrl}>{targetUrl}</a></p>
+      <div style={styles.container}>
+        <div style={styles.spinner}></div>
+        <p style={styles.text}>Redirecting...</p>
+      </div>
+
+      <style jsx>{`
+        @keyframes spin {
+          to {
+            transform: rotate(360deg);
+          }
+        }
+      `}</style>
     </>
   );
 }
+
+const styles = {
+  container: {
+    minHeight: "100vh",
+    backgroundColor: "#0f172a",
+    color: "#fff",
+    display: "flex",
+    flexDirection: "column" as const,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  spinner: {
+    width: "64px",
+    height: "64px",
+    border: "8px solid #334155",
+    borderTop: "8px solid #22c55e",
+    borderRadius: "50%",
+    animation: "spin 1s linear infinite",
+    marginBottom: "20px",
+  },
+  text: {
+    fontSize: "18px",
+    color: "#cbd5e1",
+  },
+};
