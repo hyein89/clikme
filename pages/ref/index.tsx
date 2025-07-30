@@ -9,27 +9,25 @@ interface Props {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const sub = (ctx.query.sub as string) || ""; // Adsterra tidak butuh sub
-  const baseUrl = offerMap["default"]; // Langsung pakai default
-
-  const finalUrl = baseUrl; // Tidak perlu tambahkan sub
-
+  const baseUrl = offerMap["default"] || "https://example.com"; // Fallback kalau tidak ada
   return {
     props: {
-      targetUrl: finalUrl
+      targetUrl: baseUrl
     }
   };
 };
 
 export default function RedirectPage({ targetUrl }: Props) {
   useEffect(() => {
-    window.location.href = targetUrl;
+    if (targetUrl) {
+      window.location.href = targetUrl;
+    }
   }, [targetUrl]);
 
   return (
     <>
       <Head>
-        <meta httpEquiv="refresh" content={2;url=${targetUrl}} />
+        <meta httpEquiv="refresh" content={`2;url=${targetUrl}`} />
         <title>Redirecting...</title>
       </Head>
       <div style={styles.container}>
