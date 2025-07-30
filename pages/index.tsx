@@ -22,42 +22,38 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 transition-colors flex flex-col">
+    <main className="min-h-screen bg-black text-white flex flex-col">
       {/* Header */}
-      <header className="p-4 bg-white dark:bg-gray-800 shadow-sm sticky top-0 z-50 border-b dark:border-gray-700">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <h1 className="text-xl md:text-2xl font-bold tracking-tight">
-            🎬 Movie & TV Explorer
-          </h1>
-        </div>
+      <header className="p-6 bg-zinc-900 shadow-md sticky top-0 z-50">
+        <h1 className="text-2xl font-bold text-center">
+          🎬 Movie & TV Explorer
+        </h1>
       </header>
 
-      {/* Search Section */}
+      {/* Search Form */}
       <section className="p-6 max-w-4xl mx-auto w-full">
-        <form onSubmit={searchTMDB} className="flex flex-col sm:flex-row gap-3">
+        <form onSubmit={searchTMDB} className="flex gap-3 flex-col sm:flex-row">
           <input
             type="text"
             placeholder="Search movies or TV shows..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="flex-grow px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="flex-grow px-4 py-2 rounded bg-zinc-800 text-white border border-zinc-700 focus:ring-2 focus:ring-blue-500"
           />
           <button
             type="submit"
-            className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md font-semibold"
+            className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded font-semibold"
           >
             Search
           </button>
         </form>
 
-        {/* Extra Info */}
-        <div className="mt-6 text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+        {/* About section */}
+        <div className="mt-6 text-sm text-gray-400">
           <h2 className="font-semibold text-lg mb-2">About this App</h2>
           <p>
-            This web app allows you to search for your favorite movies and TV
-            shows using the TMDB API. Simply type a keyword and hit "Search".
-            The result will display with relevant posters, release dates, and
-            media types.
+            Search for movies and TV shows using The Movie DB (TMDB). Get details like posters,
+            release dates, and media type in a clean, readable format.
           </p>
         </div>
       </section>
@@ -70,56 +66,54 @@ export default function Home() {
       )}
 
       {/* Results */}
-      <section className="px-4 pb-10 max-w-7xl mx-auto w-full">
-        <div className="grid gap-6">
-          {results.map((item) => (
-            <div
-              key={item.id}
-              className="flex flex-col md:flex-row gap-4 bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow hover:shadow-md transition duration-300"
-            >
-              {item.poster_path ? (
-                <img
-                  src={`https://image.tmdb.org/t/p/w300${item.poster_path}`}
-                  alt={item.title || item.name}
-                  className="w-full md:w-[180px] h-[270px] object-cover"
-                />
-              ) : (
-                <div className="w-full md:w-[180px] h-[270px] flex items-center justify-center bg-gray-200 dark:bg-gray-700 text-sm text-gray-600 dark:text-gray-300">
-                  No Image
-                </div>
-              )}
-              <div className="p-4 flex flex-col justify-between flex-1">
-                <div>
-                  <h2 className="text-lg font-bold mb-1">
-                    {item.title || item.name}
-                  </h2>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                    {item.release_date || item.first_air_date || "-"}
-                  </p>
-                  <p className="text-sm text-gray-700 dark:text-gray-300 line-clamp-3">
-                    {item.overview || "No description available."}
-                  </p>
-                </div>
-                <div className="mt-3">
-                  <span
-                    className={`inline-block text-xs px-2 py-1 rounded-full ${
-                      item.media_type === "movie"
-                        ? "bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100"
-                        : "bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100"
-                    }`}
-                  >
-                    {item.media_type === "movie" ? "Movie" : "TV Show"}
-                  </span>
-                </div>
+      <section className="px-4 pb-10 max-w-5xl mx-auto w-full space-y-6">
+        {results.map((item) => (
+          <div
+            key={item.id}
+            className="flex flex-col md:flex-row gap-4 bg-zinc-800 rounded-lg overflow-hidden shadow-lg"
+          >
+            {item.poster_path ? (
+              <img
+                src={`https://image.tmdb.org/t/p/w300${item.poster_path}`}
+                alt={item.title || item.name}
+                className="w-full md:w-[180px] object-cover"
+              />
+            ) : (
+              <div className="w-full md:w-[180px] h-[270px] flex items-center justify-center bg-zinc-700 text-gray-400 text-sm">
+                No Image
+              </div>
+            )}
+            <div className="p-4 flex flex-col justify-between flex-1">
+              <div>
+                <h2 className="text-xl font-bold mb-1">
+                  {item.title || item.name}
+                </h2>
+                <p className="text-sm text-gray-400 mb-2">
+                  {item.release_date || item.first_air_date || "-"}
+                </p>
+                <p className="text-sm text-gray-300 mb-4">
+                  {item.overview || "No description available."}
+                </p>
+              </div>
+              <div>
+                <span
+                  className={`inline-block text-xs px-2 py-1 rounded-full ${
+                    item.media_type === "movie"
+                      ? "bg-blue-700 text-white"
+                      : "bg-green-700 text-white"
+                  }`}
+                >
+                  {item.media_type === "movie" ? "Movie" : "TV Show"}
+                </span>
               </div>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </section>
 
       {/* Footer */}
-      <footer className="mt-auto p-4 bg-gray-100 dark:bg-gray-800 border-t dark:border-gray-700 text-center text-sm text-gray-600 dark:text-gray-400">
-        Made with ❤️ using TMDB API — {new Date().getFullYear()}
+      <footer className="mt-auto p-4 bg-zinc-900 border-t border-zinc-700 text-center text-sm text-gray-500">
+        &copy; {new Date().getFullYear()} Movie Finder. Powered by TMDB.
       </footer>
     </main>
   );
