@@ -5,7 +5,7 @@ const offerMap: Record<string, string> = {
   us: "https://wedebeek.com/click?pid=3574&offer_id=18909&sub1=",
   dk: "https://smrturl.co/a/s55095c62fb/13880?s1=",
   mx: "https://smrturl.co/a/s55095c62fb/13878?s1=",
-  default: "https://grubpaths.com/q3sc09250?key=d2f645145443ac96251458e6cadaac1b"
+  default: "https://priesthardshipwillow.com/q3sc09250?key=d2f645145443ac96251458e6cadaac1b"
 };
 
 export default offerMap;
