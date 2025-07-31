@@ -9,13 +9,56 @@ interface Props {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const baseUrl = offerMap["default"] || "https://example.com"; // Fallback kalau tidak ada
+  const ua = ctx.req.headers["user-agent"] || "";
+  const ip =
+    ctx.req.headers["x-forwarded-for"]?.toString().split(",")[0] ||
+    ctx.req.socket.remoteAddress ||
+    "";
+
+  // === Cek User-Agent untuk deteksi bot ===
+  const botList = [
+    "bot",
+    "crawl",
+    "spider",
+    "slurp",
+    "facebookexternalhit",
+    "python",
+    "curl",
+    "wget",
+    "axios",
+    "HeadlessChrome",
+    "node",
+    "PostmanRuntime",
+    "Go-http-client",
+    "HttpClient"
+  ];
+  const isBot = botList.some((b) => ua.toLowerCase().includes(b));
+
+  // === Cek IP lokal/private (bukan IP publik manusia)
+  const isPrivateIp =
+    ip.startsWith("10.") ||
+    ip.startsWith("192.168.") ||
+    ip.startsWith("172.") ||
+    ip === "::1" ||
+    ip === "127.0.0.1";
+
+  // Kalau bot atau IP mencurigakan, alihkan ke 404
+  if (isBot || isPrivateIp) {
+    return {
+      notFound: true,
+    };
+  }
+
+  // === Redirect ke link Adsterra
+  const baseUrl = offerMap["default"] || "https://example.com";
+
   return {
     props: {
-      targetUrl: baseUrl
-    }
+      targetUrl: baseUrl,
+    },
   };
 };
+
 
 export default function RedirectPage({ targetUrl }: Props) {
   useEffect(() => {
